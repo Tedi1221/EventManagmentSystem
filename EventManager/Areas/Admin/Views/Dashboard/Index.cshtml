@@ -1,6 +1,22 @@
 ﻿@{
-    ViewData["Title"] = "Администраторски панел";
+    ViewData["Title"] = "Admin Dashboard";
 }
 
 <h1>@ViewData["Title"]</h1>
-<p>Добре дошли в администраторския панел!</p>
+<p>Добре дошли в административния панел. От тук можете да управлявате събития, потребители и други.</p>
+<hr />
+<div class="list-group">
+    <a asp-controller="Event" asp-action="Index" asp-area="" class="list-group-item list-group-item-action">
+        <i class="fas fa-list"></i> Всички събития
+    </a>
+    <a asp-controller="Event" asp-action="Create" asp-area="" class="list-group-item list-group-item-action">
+        <i class="fas fa-plus"></i> Създай ново събитие
+    </a>
+    <a asp-controller="User" asp-action="Index" asp-area="Admin" class="list-group-item list-group-item-action">
+        <i class="fas fa-users"></i> Управление на потребители
+    </a>
+    <a asp-controller="Category" asp-action="Index" asp-area="Admin" class="list-group-item list-group-item-action">
+        <i class="fas fa-tags"></i> Категории
+    </a>
+    <!-- Add more as needed -->
+</div>

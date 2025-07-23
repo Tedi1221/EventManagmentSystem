@@ -3,35 +3,44 @@
     ViewData["Title"] = Model.Name;
 }
 
-<h1>@Model.Name</h1>
+<div class="container mt-4">
+    <div class="card">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="@Model.ImageUrl" class="img-fluid rounded-start" alt="@Model.Name">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h2 class="card-title">@Model.Name</h2>
+                    <p class="text-muted"><i class="fas fa-calendar-alt me-2"></i>@Model.Date.ToString("dd MMMM yyyy HH:mm")</p>
+                    <p class="text-muted"><i class="fas fa-map-marker-alt me-2"></i>@Model.Location</p>
+                    <p class="text-muted"><i class="fas fa-tag me-2"></i>@Model.Category.Name</p>
 
-<div>
-    <h4>Детайли за събитието</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Описание</dt>
-        <dd class="col-sm-10">@Model.Description</dd>
+                    <h4 class="mt-4">Описание</h4>
+                    <p class="card-text">@Model.Description</p>
 
-        <dt class="col-sm-2">Дата и час</dt>
-        <dd class="col-sm-10">@Model.Date.ToString("dd.MM.yyyy HH:mm")</dd>
-
-        <dt class="col-sm-2">Място</dt>
-        <dd class="col-sm-10">@Model.Location</dd>
-
-        <dt class="col-sm-2">Категория</dt>
-        <dd class="col-sm-10">@Model.Category.Name</dd>
-
-        <dt class="col-sm-2">Цена</dt>
-        <dd class="col-sm-10">@Model.Price.ToString("F2") лв.</dd>
-
-        <dt class="col-sm-2">Макс. участници</dt>
-        <dd class="col-sm-10">@Model.MaxParticipants</dd>
-    </dl>
-</div>
-<div>
-    @if (User.IsInRole("Administrator"))
-    {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Редактирай</a>
-    }
-    <a asp-action="Index" class="btn btn-secondary">Обратно към списъка</a>
+                    <div class="d-flex justify-content-between mt-4">
+                        <div>
+                            <span class="h4">@Model.Price.ToString("C")</span>
+                            <span class="text-muted">/ билет</span>
+                        </div>
+                        <div>
+                            @if (ViewBag.CanEdit)
+                            {
+                                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning me-2">
+                                    <i class="fas fa-edit"></i> Редактирай
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                                    <i class="fas fa-trash"></i> Изтрий
+                                </a>
+                            }
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Назад
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

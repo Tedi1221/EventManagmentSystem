@@ -8,5 +8,7 @@
 
         public string UserId { get; set; } = string.Empty;
         public User User { get; set; } = null!;
+
+        public DateTime RegistrationDate { get; set; } 
     }
 }

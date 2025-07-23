@@ -33,6 +33,11 @@ namespace EventManagementSystem.Models
         [Display(Name = "Category")]
         public int CategoryId { get; set; }
 
+        [Display(Name = "Event Image")]
+        public IFormFile? ImageFile { get; set; }
+
+        public string? ExistingImageUrl { get; set; }
+
         public IEnumerable<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
     }
 }

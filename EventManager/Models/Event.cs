@@ -34,6 +34,9 @@ namespace EventManagementSystem.Models
         [ForeignKey("CategoryId")]
         public Category Category { get; set; } = null!;
 
+        [StringLength(255)]
+        public string ImageUrl { get; set; } = "/images/default-event.jpg";
+
         public ICollection<EventParticipant> Participants { get; set; } = new List<EventParticipant>();
     }
 }

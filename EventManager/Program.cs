@@ -1,19 +1,18 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using EventManagementSystem.Data;
+﻿using EventManagementSystem.Data;
 using EventManagementSystem.Models;
 using EventManagementSystem.Services;
 using EventManagementSystem.Services.Contracts;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Конфигурация на базата данни
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+// Конфигурация на базата данни
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// 2. Конфигурация на Identity системата
+// Конфигурация на Identity
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -23,18 +22,23 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     options.Password.RequireUppercase = false;
     options.Password.RequiredLength = 6;
 })
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 
-// 3. Добавяне на услуги (Dependency Injection)
+// Добавяне на услуги
 builder.Services.AddScoped<IEventService, EventService>();
 
-// 4. Добавяне на MVC и Razor Pages
+// Конфигурация на авторизация
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Administrator"));
+});
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// 5. Конфигуриране на HTTP request pipeline
+// Конфигуриране на pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -42,7 +46,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
     app.UseHsts();
 }
 
@@ -54,7 +57,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 6. Извикване на Seeder-а за данни
+// Инициализация на данни
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -62,7 +65,7 @@ using (var scope = app.Services.CreateScope())
     await DbSeeder.SeedCategoriesAsync(services);
 }
 
-// 7. Конфигуриране на маршрути (Routes)
+// Маршрути
 app.MapControllerRoute(
     name: "Admin",
     pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
