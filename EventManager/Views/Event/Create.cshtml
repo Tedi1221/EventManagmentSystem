@@ -1,0 +1,22 @@
+﻿@model EventFormViewModel
+@{
+    ViewData["Title"] = "Създай ново събитие";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <partial name="_EventFormPartial" model="Model" />
+            <div class="form-group mt-3">
+                <input type="submit" value="Създай" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Отказ</a>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

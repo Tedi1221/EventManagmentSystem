@@ -1,0 +1,39 @@
+﻿@model EventFormViewModel
+
+<div class="form-group mb-3">
+    <label asp-for="Name" class="control-label"></label>
+    <input asp-for="Name" class="form-control" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+<div class="form-group mb-3">
+    <label asp-for="Description" class="control-label"></label>
+    <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+    <span asp-validation-for="Description" class="text-danger"></span>
+</div>
+<div class="form-group mb-3">
+    <label asp-for="Date" class="control-label"></label>
+    <input asp-for="Date" class="form-control" />
+    <span asp-validation-for="Date" class="text-danger"></span>
+</div>
+<div class="form-group mb-3">
+    <label asp-for="Location" class="control-label"></label>
+    <input asp-for="Location" class="form-control" />
+    <span asp-validation-for="Location" class="text-danger"></span>
+</div>
+<div class="form-group mb-3">
+    <label asp-for="CategoryId" class="control-label"></label>
+    <select asp-for="CategoryId" class="form-control" asp-items="Model.Categories">
+        <option value="">-- Избери категория --</option>
+    </select>
+    <span asp-validation-for="CategoryId" class="text-danger"></span>
+</div>
+<div class="form-group mb-3">
+    <label asp-for="Price" class="control-label"></label>
+    <input asp-for="Price" class="form-control" />
+    <span asp-validation-for="Price" class="text-danger"></span>
+</div>
+<div class="form-group mb-3">
+    <label asp-for="MaxParticipants" class="control-label"></label>
+    <input asp-for="MaxParticipants" class="form-control" />
+    <span asp-validation-for="MaxParticipants" class="text-danger"></span>
+</div>

@@ -1,0 +1,81 @@
+﻿@model IEnumerable<EventManagementSystem.Models.Event>
+
+@{
+    ViewData["Title"] = "Списък със събития";
+    var totalPages = (int)ViewBag.TotalPages;
+    var currentPage = (int)ViewBag.CurrentPage;
+    var searchTerm = ViewBag.SearchTerm as string;
+    var categoryId = ViewBag.CategoryId as int?;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (User.IsInRole("Administrator"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Създай ново събитие</a>
+    </p>
+}
+
+
+<!-- Форма за търсене и филтриране -->
+<form asp-action="Index" method="get" class="row g-3 mb-4">
+    <div class="col-md-6">
+        <input type="text" name="searchTerm" value="@searchTerm" class="form-control" placeholder="Търси по име или описание..." />
+    </div>
+    <div class="col-md-4">
+        <select name="categoryId" asp-items="@ViewBag.Categories" class="form-select">
+            <option value="">Всички категории</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-info w-100">Търси</button>
+    </div>
+</form>
+
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Name</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@item.Category.Name</h6>
+                    <p class="card-text">@item.Description.Substring(0, Math.Min(item.Description.Length, 100))...</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Дата:</strong> @item.Date.ToString("dd.MM.yyyy HH:mm")</li>
+                    <li class="list-group-item"><strong>Място:</strong> @item.Location</li>
+                    <li class="list-group-item"><strong>Цена:</strong> @item.Price.ToString("F2") лв.</li>
+                </ul>
+                <div class="card-body">
+                    <a href="#" class="btn btn-primary">Детайли</a>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <a href="#" class="btn btn-warning">Редактирай</a>
+                        <a href="#" class="btn btn-danger">Изтрий</a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Пагинация -->
+@if (totalPages > 1)
+{
+    <nav>
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == currentPage ? "active" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-page="@i"
+                       asp-route-searchTerm="@searchTerm"
+                       asp-route-categoryId="@categoryId">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

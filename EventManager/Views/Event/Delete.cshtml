@@ -1,0 +1,23 @@
+﻿@model Event
+@{
+    ViewData["Title"] = "Изтрий събитие";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h3 class="text-danger">Наистина ли искате да изтриете това събитие?</h3>
+<div>
+    <h4>@Model.Name</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Описание</dt>
+        <dd class="col-sm-10">@Model.Description</dd>
+        <dt class="col-sm-2">Дата</dt>
+        <dd class="col-sm-10">@Model.Date.ToString("g")</dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Изтрий" class="btn btn-danger" /> |
+        <a asp-action="Index">Обратно към списъка</a>
+    </form>
+</div>
