@@ -1,0 +1,26 @@
+﻿@model EventManagementSystem.Models.EventFormViewModel
+@{
+    ViewData["Title"] = "Редактирай събитие";
+}
+
+<div class="card card-glassmorphism">
+    <div class="card-body">
+        <h1 class="card-title">@ViewData["Title"]</h1>
+        <hr />
+        <div class="row">
+            <div class="col-md-8">
+                <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="Id" />
+                    <partial name="_EventFormPartial" model="Model" />
+                    <div class="form-group mt-3">
+                        <input type="submit" value="Запази" class="btn btn-primary" />
+                        <a asp-action="Index" class="btn btn-secondary">Отказ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

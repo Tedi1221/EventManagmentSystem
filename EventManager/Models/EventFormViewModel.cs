@@ -39,5 +39,10 @@ namespace EventManagementSystem.Models
         public string? ExistingImageUrl { get; set; }
 
         public IEnumerable<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
+
+        // Define properties for the view model here
+        public string EventName { get; set; }
+        public DateTime EventDate { get; set; }
+        // Add other properties as needed
     }
 }

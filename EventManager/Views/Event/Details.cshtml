@@ -3,41 +3,34 @@
     ViewData["Title"] = Model.Name;
 }
 
-<div class="container mt-4">
-    <div class="card">
-        <div class="row g-0">
-            <div class="col-md-4">
-                <img src="@Model.ImageUrl" class="img-fluid rounded-start" alt="@Model.Name">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h2 class="card-title">@Model.Name</h2>
-                    <p class="text-muted"><i class="fas fa-calendar-alt me-2"></i>@Model.Date.ToString("dd MMMM yyyy HH:mm")</p>
-                    <p class="text-muted"><i class="fas fa-map-marker-alt me-2"></i>@Model.Location</p>
-                    <p class="text-muted"><i class="fas fa-tag me-2"></i>@Model.Category.Name</p>
+<div class="card card-glassmorphism">
+    <div class="row g-0">
+        <div class="col-lg-5">
+            <img src="@Model.ImageUrl" class="details-img" alt="@Model.Name">
+        </div>
+        <div class="col-lg-7">
+            <div class="card-body p-4">
+                <span class="badge bg-primary mb-2 fs-6">@Model.Category.Name</span>
+                <h1 class="card-title">@Model.Name</h1>
+                <hr />
+                <p class="fs-5"><i class="fa-solid fa-calendar-days text-primary me-2"></i><strong>Дата:</strong> @Model.Date.ToString("dd MMMM yyyy, HH:mm")</p>
+                <p class="fs-5"><i class="fa-solid fa-location-dot text-primary me-2"></i><strong>Място:</strong> @Model.Location</p>
+                <p class="fs-5"><i class="fa-solid fa-users text-primary me-2"></i><strong>Макс. участници:</strong> @Model.MaxParticipants</p>
 
-                    <h4 class="mt-4">Описание</h4>
-                    <p class="card-text">@Model.Description</p>
+                <h4 class="mt-4">Описание</h4>
+                <p class="card-text">@Model.Description</p>
 
-                    <div class="d-flex justify-content-between mt-4">
-                        <div>
-                            <span class="h4">@Model.Price.ToString("C")</span>
-                            <span class="text-muted">/ билет</span>
-                        </div>
-                        <div>
-                            @if (ViewBag.CanEdit)
-                            {
-                                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning me-2">
-                                    <i class="fas fa-edit"></i> Редактирай
-                                </a>
-                                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
-                                    <i class="fas fa-trash"></i> Изтрий
-                                </a>
-                            }
-                            <a asp-action="Index" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Назад
-                            </a>
-                        </div>
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <div>
+                        <span class="h2 fw-bold text-primary">@Model.Price.ToString("C")</span>
+                    </div>
+                    <div>
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning"><i class="fa fa-edit me-2"></i>Редактирай</a>
+                            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger"><i class="fa fa-trash me-2"></i>Изтрий</a>
+                        }
+                        <a asp-action="Index" class="btn btn-secondary"><i class="fa fa-arrow-left me-2"></i>Обратно</a>
                     </div>
                 </div>
             </div>

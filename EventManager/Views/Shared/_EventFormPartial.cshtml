@@ -5,35 +5,62 @@
     <input asp-for="Name" class="form-control" />
     <span asp-validation-for="Name" class="text-danger"></span>
 </div>
+
+<!-- НОВО: Поле за качване на снимка -->
+<div class="form-group mb-3">
+    <label asp-for="ImageFile" class="control-label"></label>
+    <input asp-for="ImageFile" type="file" class="form-control" />
+    <span asp-validation-for="ImageFile" class="text-danger"></span>
+    @if (!string.IsNullOrEmpty(Model.ExistingImageUrl))
+    {
+        <div class="mt-2">
+            <p>Текуща снимка:</p>
+            <img src="@Model.ExistingImageUrl" style="width: 150px; border-radius: 8px;" />
+        </div>
+    }
+</div>
+
 <div class="form-group mb-3">
     <label asp-for="Description" class="control-label"></label>
     <textarea asp-for="Description" class="form-control" rows="5"></textarea>
     <span asp-validation-for="Description" class="text-danger"></span>
 </div>
-<div class="form-group mb-3">
-    <label asp-for="Date" class="control-label"></label>
-    <input asp-for="Date" class="form-control" />
-    <span asp-validation-for="Date" class="text-danger"></span>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label asp-for="Date" class="control-label"></label>
+            <input asp-for="Date" class="form-control" type="datetime-local" />
+            <span asp-validation-for="Date" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label asp-for="Location" class="control-label"></label>
+            <input asp-for="Location" class="form-control" />
+            <span asp-validation-for="Location" class="text-danger"></span>
+        </div>
+    </div>
 </div>
-<div class="form-group mb-3">
-    <label asp-for="Location" class="control-label"></label>
-    <input asp-for="Location" class="form-control" />
-    <span asp-validation-for="Location" class="text-danger"></span>
-</div>
-<div class="form-group mb-3">
-    <label asp-for="CategoryId" class="control-label"></label>
-    <select asp-for="CategoryId" class="form-control" asp-items="Model.Categories">
-        <option value="">-- Избери категория --</option>
-    </select>
-    <span asp-validation-for="CategoryId" class="text-danger"></span>
-</div>
-<div class="form-group mb-3">
-    <label asp-for="Price" class="control-label"></label>
-    <input asp-for="Price" class="form-control" />
-    <span asp-validation-for="Price" class="text-danger"></span>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label asp-for="CategoryId" class="control-label"></label>
+            <select asp-for="CategoryId" class="form-select" asp-items="Model.Categories">
+                <option value="">-- Избери категория --</option>
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label asp-for="Price" class="control-label"></label>
+            <input asp-for="Price" class="form-control" type="number" step="0.01" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+    </div>
 </div>
 <div class="form-group mb-3">
     <label asp-for="MaxParticipants" class="control-label"></label>
-    <input asp-for="MaxParticipants" class="form-control" />
+    <input asp-for="MaxParticipants" class="form-control" type="number" />
     <span asp-validation-for="MaxParticipants" class="text-danger"></span>
 </div>

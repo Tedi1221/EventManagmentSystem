@@ -1,13 +1,27 @@
-﻿<!-- Път: Views/Home/Index.cshtml -->
-@{
+﻿@{
     ViewData["Title"] = "Начална страница";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Добре дошли в Event Management System</h1>
-    <p class="lead">Вашето място за организиране и намиране на най-добрите събития.</p>
-    <hr />
-    <p>
-        <a asp-controller="Event" asp-action="Index" class="btn btn-primary btn-lg">Разгледай всички събития &raquo;</a>
-    </p>
+<!-- Нова Hero секция -->
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="display-4 fw-bold">Открий Твоето Събитие</h1>
+        <p class="lead fs-4">Платформата, която събира всички незабравими моменти на едно място.</p>
+        <a asp-controller="Event" asp-action="Index" class="btn btn-primary btn-lg mt-3">Разгледай събитията &raquo;</a>
+    </div>
+</div>
+
+<div class="row text-center">
+    <div class="col-md-4">
+        <h2>За всеки</h2>
+        <p>Независимо дали търсиш концерт, спортно събитие или технологична конференция, тук ще намериш по нещо за всеки вкус.</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Лесна организация</h2>
+        <p>Ако си организатор, нашата платформа ти дава всички инструменти, за да достигнеш до твоята аудитория лесно и бързо.</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Сигурно и надеждно</h2>
+        <p>С нашата система за управление на потребители и събития, можеш да бъдеш сигурен в качеството и надеждността на услугата.</p>
+    </div>
 </div>

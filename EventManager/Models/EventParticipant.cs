@@ -1,6 +1,6 @@
-﻿namespace EventManagementSystem.Models
+﻿// Път: Models/EventParticipant.cs
+namespace EventManagementSystem.Models
 {
-    // Join Table за връзка User <-> Event
     public class EventParticipant
     {
         public int EventId { get; set; }
@@ -9,6 +9,6 @@
         public string UserId { get; set; } = string.Empty;
         public User User { get; set; } = null!;
 
-        public DateTime RegistrationDate { get; set; } 
+        public DateTime RegistrationDate { get; set; }
     }
 }
