@@ -8,20 +8,13 @@
         <p>Добре дошли в административния панел. От тук можете да управлявате събития, потребители и други.</p>
         <hr />
         <div class="list-group">
-            <!-- КОРИГИРАН ЛИНК: Вече сочи към новия EventController в Admin зоната -->
-            <a asp-controller="Event" asp-action="Index" asp-area="Admin" class="list-group-item list-group-item-action">
+            <!-- КОРИГИРАН ЛИНК: Вече сочи към новия AdminEventController -->
+            <a asp-controller="AdminEvent" asp-action="Index" asp-area="Admin" class="list-group-item list-group-item-action">
                 <i class="fas fa-list btn-icon"></i> Управление на събития
-            </a>
-            <!-- КОРИГИРАН ЛИНК: Вече сочи към новия EventController в Admin зоната -->
-            <a asp-controller="Event" asp-action="Create" asp-area="Admin" class="list-group-item list-group-item-action">
-                <i class="fas fa-plus btn-icon"></i> Създай ново събитие
             </a>
             <!-- КОРИГИРАН ЛИНК: Този вече работи -->
             <a asp-controller="User" asp-action="Index" asp-area="Admin" class="list-group-item list-group-item-action">
                 <i class="fas fa-users btn-icon"></i> Управление на потребители
-            </a>
-            <a href="#" class="list-group-item list-group-item-action disabled">
-                <i class="fas fa-tags btn-icon"></i> Категории 
             </a>
         </div>
     </div>
