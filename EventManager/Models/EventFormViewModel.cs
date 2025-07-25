@@ -1,41 +1,48 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EventManagementSystem.Models
 {
+    // ViewModel за формите за създаване/редакция на събитие
     public class EventFormViewModel
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Името е задължително.")]
+        [Required]
         [StringLength(100)]
         public string Name { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Описанието е задължително.")]
+        [Required]
         [StringLength(2000)]
         public string Description { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Датата е задължителна.")]
+        [Required]
         public DateTime Date { get; set; } = DateTime.Now;
 
-        [Required(ErrorMessage = "Мястото е задължително.")]
+        [Required]
         [StringLength(200)]
         public string Location { get; set; } = string.Empty;
 
-        [Range(0, double.MaxValue, ErrorMessage = "Цената трябва да е положително число.")]
+        [Range(0, double.MaxValue)]
         public decimal Price { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "Максималният брой участници трябва да е поне 1.")]
+        [Range(1, int.MaxValue)]
         public int MaxParticipants { get; set; }
 
-        [Required(ErrorMessage = "Категорията е задължителна.")]
+        [Required]
         [Display(Name = "Category")]
         public int CategoryId { get; set; }
 
+        [Display(Name = "Event Image")]
+        public IFormFile? ImageFile { get; set; }
+
+        public string? ExistingImageUrl { get; set; }
+
         public IEnumerable<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
 
-        [Display(Name = "Снимка на събитието")]
-        public IFormFile? ImageFile { get; set; }
-        public string? ExistingImageUrl { get; set; }
+        // Define properties for the view model here
+        public string EventName { get; set; }
+        public DateTime EventDate { get; set; }
+        // Add other properties as needed
     }
 }

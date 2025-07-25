@@ -26,9 +26,13 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 .AddDefaultTokenProviders();
 
 // Добавяне на услуги
-// НУЖНО Е ЗА КАЧВАНЕ НА СНИМКИ
-builder.Services.AddSingleton<IWebHostEnvironment>(builder.Environment);
 builder.Services.AddScoped<IEventService, EventService>();
+
+// Конфигурация на авторизация
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Administrator"));
+});
 
 builder.Services.AddControllersWithViews();
 
@@ -46,7 +50,7 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles(); // Това позволява сервирането на файлове от wwwroot (снимки, css)
+app.UseStaticFiles();
 
 app.UseRouting();
 

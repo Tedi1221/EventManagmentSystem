@@ -5,24 +5,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 
-// Преименувахме класа на AdminEventController, за да избегнем конфликт
 namespace EventManagementSystem.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Administrator")]
-    public class AdminEventController : Controller // <-- Името е сменено тук
+    public class EventController : Controller
     {
         private readonly IEventService _eventService;
 
-        public AdminEventController(IEventService eventService) // <-- Името е сменено тук
+        public EventController(IEventService eventService)
         {
             _eventService = eventService;
         }
 
-        // GET: Admin/AdminEvent
+        // GET: Admin/Event
         public async Task<IActionResult> Index(string? searchTerm, int? categoryId, int page = 1)
         {
-            const int pageSize = 10;
+            const int pageSize = 10; // Може да показваме повече елементи в админ панела
             var (events, totalCount) = await _eventService.GetAllAsync(searchTerm, categoryId, page, pageSize);
 
             ViewBag.TotalPages = (int)System.Math.Ceiling(totalCount / (double)pageSize);
@@ -34,7 +33,7 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             return View(events);
         }
 
-        // GET: Admin/AdminEvent/Create
+        // GET: Admin/Event/Create
         public async Task<IActionResult> Create()
         {
             var model = new EventFormViewModel
@@ -44,7 +43,7 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             return View(model);
         }
 
-        // POST: Admin/AdminEvent/Create
+        // POST: Admin/Event/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EventFormViewModel model)
@@ -58,7 +57,7 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Admin/AdminEvent/Edit/5
+        // GET: Admin/Event/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             var eventModel = await _eventService.GetByIdAsync(id);
@@ -84,7 +83,7 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             return View(viewModel);
         }
 
-        // POST: Admin/AdminEvent/Edit/5
+        // POST: Admin/Event/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EventFormViewModel model)
@@ -104,7 +103,7 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Admin/AdminEvent/Delete/5
+        // GET: Admin/Event/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var eventModel = await _eventService.GetByIdAsync(id);
@@ -115,7 +114,7 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             return View(eventModel);
         }
 
-        // POST: Admin/AdminEvent/Delete/5
+        // POST: Admin/Event/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -1,5 +1,4 @@
-﻿// Път: Services/Contracts/IEventService.cs
-using EventManagementSystem.Models; // <-- ТАЗИ ДИРЕКТИВА Е КЛЮЧОВА
+﻿using EventManagementSystem.Models;
 
 namespace EventManagementSystem.Services.Contracts
 {
@@ -7,8 +6,8 @@ namespace EventManagementSystem.Services.Contracts
     {
         Task<(IEnumerable<Event> Events, int TotalCount)> GetAllAsync(string? searchTerm, int? categoryId, int page, int pageSize);
         Task<Event?> GetByIdAsync(int id);
-        Task CreateAsync(EventFormViewModel model); // <-- Използва ViewModel
-        Task UpdateAsync(EventFormViewModel model); // <-- Използва ViewModel
+        Task CreateAsync(EventFormViewModel model);
+        Task UpdateAsync(EventFormViewModel model);
         Task DeleteAsync(int id);
         Task<IEnumerable<Category>> GetAllCategoriesAsync();
     }

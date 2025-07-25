@@ -1,14 +1,14 @@
-﻿@model EventFormViewModel
+﻿@model EventManagementSystem.Models.EventFormViewModel
 @{
     ViewData["Title"] = "Създай ново събитие";
 }
+
 <div class="card card-glassmorphism">
     <div class="card-body">
         <h1 class="card-title">@ViewData["Title"]</h1>
         <hr />
         <div class="row">
             <div class="col-md-8">
-                <!-- НАЙ-ВАЖНАТА ПРОМЯНА: Добавяне на enctype -->
                 <form asp-action="Create" method="post" enctype="multipart/form-data">
                     <partial name="_EventFormPartial" model="Model" />
                     <div class="form-group mt-3">
