@@ -3,9 +3,9 @@
 ![.NET](https://img.shields.io/badge/.NET-8.0-blueviolet)
 ![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-MVC-blue)
 ![Tests](https://img.shields.io/badge/Tests-xUnit%20%7C%20Moq-orange)
-![License](https://img.shields.io/github/license/Tedi1221/EventManager)
-![Last Commit](https://img.shields.io/github/last-commit/Tedi1221/EventManager)
-![Repo Size](https://img.shields.io/github/repo-size/Tedi1221/EventManager)
+![License](https://img.shields.io/github/license/Tedi1221/EventManagmentSystem)
+![Last Commit](https://img.shields.io/github/last-commit/Tedi1221/EventManagmentSystem)
+![Repo Size](https://img.shields.io/github/repo-size/Tedi1221/EventManagmentSystem)
 
 Welcome to **EventManager**, a modern and intuitive web application for creating, managing, and exploring events of all kinds – from conferences and workshops to parties and concerts.
 
