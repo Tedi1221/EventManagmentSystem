@@ -1,4 +1,7 @@
 ﻿using EventManagementSystem.Models;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EventManagementSystem.Services.Contracts
 {
@@ -6,9 +9,13 @@ namespace EventManagementSystem.Services.Contracts
     {
         Task<(IEnumerable<Event> Events, int TotalCount)> GetAllAsync(string? searchTerm, int? categoryId, int page, int pageSize);
         Task<Event?> GetByIdAsync(int id);
-        Task CreateAsync(EventFormViewModel model);
-        Task UpdateAsync(EventFormViewModel model);
-        Task DeleteAsync(int id);
+        Task<Event> CreateAsync(Event eventToCreate, IFormFile? imageFile);
+        Task<Event> UpdateAsync(Event eventToUpdate, IFormFile? imageFile);
         Task<IEnumerable<Category>> GetAllCategoriesAsync();
+        void DeleteImage(string imageUrl);
+        Task<string> SaveImageAsync(IFormFile? imageFile);
+
+        // ПОПРАВКА: Обнови този ред, за да приема 3 аргумента
+        Task<bool> DeleteAsync(int id, string userId, bool isAdmin = false);
     }
 }

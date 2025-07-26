@@ -1,42 +1,29 @@
-﻿@model IEnumerable<EventManagementSystem.Models.Event>
+﻿@model IEnumerable<EventManagementSystem.Models.User>
 
 @{
-    ViewData["Title"] = "Управление на събития";
+    ViewData["Title"] = "Управление на потребители";
 }
 
 <div class="card card-glassmorphism">
     <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1 class="card-title">@ViewData["Title"]</h1>
-            <a asp-action="Create" class="btn btn-primary"><i class="fa fa-plus me-2"></i>Създай ново събитие</a>
-        </div>
+        <h1 class="card-title">@ViewData["Title"]</h1>
         <hr />
-
         <table class="table table-hover align-middle">
             <thead>
                 <tr>
-                    <th>Събитие</th>
-                    <th>Категория</th>
-                    <th>Дата</th>
-                    <th>Място</th>
+                    <th>Потребителско име</th>
+                    <th>Имейл</th>
                     <th>Действия</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var user in Model)
                 {
                     <tr>
+                        <td>@user.UserName</td>
+                        <td>@user.Email</td>
                         <td>
-                            <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "/images/default-event.jpg" : item.ImageUrl)" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
-                            @item.Name
-                        </td>
-                        <td>@item.Category.Name</td>
-                        <td>@item.Date.ToString("dd MMM yyyy")</td>
-                        <td>@item.Location</td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning"><i class="fa fa-edit"></i></a>
-                            <a asp-controller="Event" asp-action="Details" asp-area="" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info"><i class="fa fa-eye"></i></a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></a>
+                            <a asp-controller="User" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-outline-warning" title="Редактирай роли"><i class="fa fa-user-shield"></i></a>
                         </td>
                     </tr>
                 }

@@ -1,27 +1,31 @@
 ﻿using EventManagementSystem.Models;
 using EventManagementSystem.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace EventManagementSystem.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Administrator")]
-    public class EventController : Controller
+    public class AdminEventController : Controller
     {
         private readonly IEventService _eventService;
+        private readonly UserManager<User> _userManager;
 
-        public EventController(IEventService eventService)
+        public AdminEventController(IEventService eventService, UserManager<User> userManager)
         {
             _eventService = eventService;
+            _userManager = userManager;
         }
 
-        // GET: Admin/Event
+        // GET: Admin/AdminEvent
         public async Task<IActionResult> Index(string? searchTerm, int? categoryId, int page = 1)
         {
-            const int pageSize = 10; // Може да показваме повече елементи в админ панела
+            const int pageSize = 10;
             var (events, totalCount) = await _eventService.GetAllAsync(searchTerm, categoryId, page, pageSize);
 
             ViewBag.TotalPages = (int)System.Math.Ceiling(totalCount / (double)pageSize);
@@ -33,9 +37,11 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             return View(events);
         }
 
-        // GET: Admin/Event/Create
+        // GET: Admin/AdminEvent/Create
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
+            // ПОПРАВКА: Създаваме модела и му подаваме списъка с категории.
             var model = new EventFormViewModel
             {
                 Categories = new SelectList(await _eventService.GetAllCategoriesAsync(), "Id", "Name")
@@ -43,28 +49,41 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             return View(model);
         }
 
-        // POST: Admin/Event/Create
+        // POST: Admin/AdminEvent/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EventFormViewModel model)
         {
             if (!ModelState.IsValid)
             {
+                // Ако има грешка, зареждаме категориите отново преди да върнем изгледа.
                 model.Categories = new SelectList(await _eventService.GetAllCategoriesAsync(), "Id", "Name", model.CategoryId);
                 return View(model);
             }
-            await _eventService.CreateAsync(model);
+
+            var eventToCreate = new Event
+            {
+                Name = model.Name,
+                Description = model.Description,
+                Date = model.Date,
+                Location = model.Location,
+                Price = model.Price,
+                MaxParticipants = model.MaxParticipants,
+                CategoryId = model.CategoryId,
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            };
+
+            await _eventService.CreateAsync(eventToCreate, model.ImageFile);
+
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Admin/Event/Edit/5
+        // GET: Admin/AdminEvent/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var eventModel = await _eventService.GetByIdAsync(id);
-            if (eventModel == null)
-            {
-                return NotFound();
-            }
+            if (eventModel == null) return NotFound();
 
             var viewModel = new EventFormViewModel
             {
@@ -77,21 +96,19 @@ namespace EventManagementSystem.Areas.Admin.Controllers
                 MaxParticipants = eventModel.MaxParticipants,
                 CategoryId = eventModel.CategoryId,
                 ExistingImageUrl = eventModel.ImageUrl,
+                // Тази линия е коректна и зарежда категориите за Edit страницата.
                 Categories = new SelectList(await _eventService.GetAllCategoriesAsync(), "Id", "Name", eventModel.CategoryId)
             };
 
             return View(viewModel);
         }
 
-        // POST: Admin/Event/Edit/5
+        // POST: Admin/AdminEvent/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EventFormViewModel model)
         {
-            if (id != model.Id)
-            {
-                return BadRequest();
-            }
+            if (id != model.Id) return BadRequest();
 
             if (!ModelState.IsValid)
             {
@@ -99,11 +116,24 @@ namespace EventManagementSystem.Areas.Admin.Controllers
                 return View(model);
             }
 
-            await _eventService.UpdateAsync(model);
+            var eventToUpdate = await _eventService.GetByIdAsync(id);
+            if (eventToUpdate == null) return NotFound();
+
+            eventToUpdate.Name = model.Name;
+            eventToUpdate.Description = model.Description;
+            eventToUpdate.Date = model.Date;
+            eventToUpdate.Location = model.Location;
+            eventToUpdate.Price = model.Price;
+            eventToUpdate.MaxParticipants = model.MaxParticipants;
+            eventToUpdate.CategoryId = model.CategoryId;
+
+            await _eventService.UpdateAsync(eventToUpdate, model.ImageFile);
+
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Admin/Event/Delete/5
+        // GET: Admin/AdminEvent/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var eventModel = await _eventService.GetByIdAsync(id);
@@ -114,12 +144,14 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             return View(eventModel);
         }
 
-        // POST: Admin/Event/Delete/5
+        // POST: Admin/AdminEvent/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _eventService.DeleteAsync(id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await _eventService.DeleteAsync(id, userId, true);
+
             return RedirectToAction(nameof(Index));
         }
     }

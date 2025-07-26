@@ -17,8 +17,8 @@
     @if (User.IsInRole("Administrator"))
     {
         <div>
-            <a asp-controller="Event" asp-action="Create" class="btn btn-primary btn-lg">
-                <i class="fa fa-plus me-2"></i>Създай събитие
+            <a asp-area="Admin" asp-controller="AdminEvent" asp-action="Create" class="btn btn-primary">
+                Създай ново събитие
             </a>
         </div>
     }

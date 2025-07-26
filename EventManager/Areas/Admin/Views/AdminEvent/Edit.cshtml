@@ -9,18 +9,21 @@
         <hr />
         <div class="row">
             <div class="col-md-8">
-                <form asp-action="Edit" method="post" enctype="multipart/form-data">
-                    <input type="hidden" asp-for="Id" />
+                <form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                     <partial name="_EventFormPartial" model="Model" />
+
                     <div class="form-group mt-3">
-                        <input type="submit" value="Запази" class="btn btn-primary" />
-                        <a asp-action="Index" class="btn btn-secondary">Отказ</a>
+                        <input type="submit" value="Запази промените" class="btn btn-primary" />
+                        <a asp-action="Index" asp-controller="AdminEvent" class="btn btn-secondary">Отказ</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

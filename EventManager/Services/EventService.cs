@@ -1,9 +1,13 @@
 ﻿using EventManagementSystem.Data;
 using EventManagementSystem.Models;
 using EventManagementSystem.Services.Contracts;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EventManagementSystem.Services
 {
@@ -22,6 +26,7 @@ namespace EventManagementSystem.Services
         {
             var query = _context.Events
                 .Include(e => e.Category)
+                .OrderByDescending(e => e.Date)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
@@ -40,7 +45,6 @@ namespace EventManagementSystem.Services
             var totalCount = await query.CountAsync();
 
             var events = await query
-                .OrderByDescending(e => e.Date)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -52,94 +56,84 @@ namespace EventManagementSystem.Services
         {
             return await _context.Events
                 .Include(e => e.Category)
-                .Include(e => e.Participants)
-                .ThenInclude(ep => ep.User)
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task CreateAsync(EventFormViewModel model)
+        public async Task<Event> CreateAsync(Event eventToCreate, IFormFile? imageFile)
         {
-            var imageUrl = await SaveImageAsync(model.ImageFile);
-
-            var newEvent = new Event
+            if (imageFile != null && imageFile.Length > 0)
             {
-                Name = model.Name,
-                Description = model.Description,
-                Date = model.Date,
-                Location = model.Location,
-                Price = model.Price,
-                MaxParticipants = model.MaxParticipants,
-                CategoryId = model.CategoryId,
-                ImageUrl = imageUrl
-            };
-
-            await _context.Events.AddAsync(newEvent);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(EventFormViewModel model)
-        {
-            var eventToUpdate = await _context.Events.FindAsync(model.Id);
-            if (eventToUpdate == null)
+                eventToCreate.ImageUrl = await SaveImageAsync(imageFile);
+            }
+            else
             {
-                throw new ArgumentException("Event not found");
+                eventToCreate.ImageUrl = "/images/default-event.jpg"; // Задаваме снимка по подразбиране
             }
 
-            eventToUpdate.Name = model.Name;
-            eventToUpdate.Description = model.Description;
-            eventToUpdate.Date = model.Date;
-            eventToUpdate.Location = model.Location;
-            eventToUpdate.Price = model.Price;
-            eventToUpdate.MaxParticipants = model.MaxParticipants;
-            eventToUpdate.CategoryId = model.CategoryId;
+            _context.Events.Add(eventToCreate);
+            await _context.SaveChangesAsync();
+            return eventToCreate;
+        }
 
-            if (model.ImageFile != null && model.ImageFile.Length > 0)
+        public async Task<Event> UpdateAsync(Event eventToUpdate, IFormFile? imageFile)
+        {
+            if (imageFile != null && imageFile.Length > 0)
             {
-                // Delete old image if exists
-                if (!string.IsNullOrEmpty(eventToUpdate.ImageUrl) &&
-                    !eventToUpdate.ImageUrl.Equals("/images/default-event.jpg"))
+                // Изтриваме старата снимка, ако има такава и не е default
+                if (!string.IsNullOrEmpty(eventToUpdate.ImageUrl) && !eventToUpdate.ImageUrl.Equals("/images/default-event.jpg"))
                 {
                     DeleteImage(eventToUpdate.ImageUrl);
                 }
-                eventToUpdate.ImageUrl = await SaveImageAsync(model.ImageFile);
+                eventToUpdate.ImageUrl = await SaveImageAsync(imageFile);
             }
 
             _context.Events.Update(eventToUpdate);
             await _context.SaveChangesAsync();
+            return eventToUpdate;
         }
 
-        public async Task DeleteAsync(int id)
+        // ДОБАВЕН ЦЕЛИЯТ МЕТОД ЗА ИЗТРИВАНЕ
+        public async Task<bool> DeleteAsync(int id, string userId, bool isAdmin = false)
         {
             var eventToDelete = await _context.Events.FindAsync(id);
-            if (eventToDelete == null)
+            if (eventToDelete == null) return false;
+
+            // Ако потребителят не е админ, проверяваме дали е собственик
+            if (!isAdmin && eventToDelete.UserId != userId)
             {
-                throw new ArgumentException("Event not found");
+                return false; // Не позволяваме изтриването
             }
 
-            // Delete associated image
-            if (!string.IsNullOrEmpty(eventToDelete.ImageUrl) &&
-                !eventToDelete.ImageUrl.Equals("/images/default-event.jpg"))
+            // Ако е админ, горната проверка се пропуска и се трие директно
+            if (!string.IsNullOrEmpty(eventToDelete.ImageUrl))
             {
                 DeleteImage(eventToDelete.ImageUrl);
             }
-
             _context.Events.Remove(eventToDelete);
             await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            return await _context.Categories
-                .OrderBy(c => c.Name)
-                .ToListAsync();
+            return await _context.Categories.OrderBy(c => c.Name).ToListAsync();
         }
 
-        private async Task<string> SaveImageAsync(IFormFile? imageFile)
+        public void DeleteImage(string imageUrl)
         {
-            if (imageFile == null || imageFile.Length == 0)
+            if (string.IsNullOrEmpty(imageUrl) || imageUrl.Equals("/images/default-event.jpg")) return;
+
+            var imagePath = Path.Combine(_hostingEnvironment.WebRootPath, imageUrl.TrimStart('/'));
+
+            if (File.Exists(imagePath))
             {
-                return "/images/default-event.jpg";
+                File.Delete(imagePath);
             }
+        }
+
+        public async Task<string> SaveImageAsync(IFormFile? imageFile)
+        {
+            if (imageFile == null || imageFile.Length == 0) return "/images/default-event.jpg";
 
             var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "images", "events");
             if (!Directory.Exists(uploadsFolder))
@@ -156,50 +150,6 @@ namespace EventManagementSystem.Services
             }
 
             return $"/images/events/{uniqueFileName}";
-        }
-
-        private void DeleteImage(string imageUrl)
-        {
-            if (string.IsNullOrEmpty(imageUrl)) return;
-
-            var imagePath = Path.Combine(_hostingEnvironment.WebRootPath, imageUrl.TrimStart('/'));
-            if (System.IO.File.Exists(imagePath))
-            {
-                System.IO.File.Delete(imagePath);
-            }
-        }
-
-        public async Task<bool> RegisterForEventAsync(int eventId, string userId)
-        {
-            var eventItem = await _context.Events.FindAsync(eventId);
-            if (eventItem == null) return false;
-
-            var user = await _context.Users.FindAsync(userId);
-            if (user == null) return false;
-
-            // Check if already registered
-            var existingRegistration = await _context.EventParticipants
-                .FirstOrDefaultAsync(ep => ep.EventId == eventId && ep.UserId == userId);
-
-            if (existingRegistration != null) return false;
-
-            // Check if event has available spots
-            var currentParticipants = await _context.EventParticipants
-                .CountAsync(ep => ep.EventId == eventId);
-
-            if (currentParticipants >= eventItem.MaxParticipants) return false;
-
-            var participant = new EventParticipant
-            {
-                EventId = eventId,
-                UserId = userId,
-                RegistrationDate = DateTime.Now
-            };
-
-            _context.EventParticipants.Add(participant);
-            await _context.SaveChangesAsync();
-
-            return true;
         }
     }
 }

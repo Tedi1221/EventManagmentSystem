@@ -17,6 +17,7 @@ namespace EventManagementSystem.Models
         public string Description { get; set; } = string.Empty;
 
         [Required]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; } = DateTime.Now;
 
         [Required]

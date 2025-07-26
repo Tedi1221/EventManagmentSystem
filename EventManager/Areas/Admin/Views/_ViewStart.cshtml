@@ -1,15 +1,3 @@
 ﻿@{
-    Layout = "_Layout";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
-
-
-@{
-    ViewData["Title"] = "Admin Dashboard";
-}
-
-<h1>@ViewData["Title"]</h1>
-<p>Добре дошли в административния панел. От тук можете да управлявате събития, потребители и други.</p>
-<hr />
-<div class="list-group">
-    <a asp-controller="Event" asp-action="Create" asp-area="" class="list-group-item list-group-item-action">Създай ново събитие</a>
-</div>

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading.Tasks;
 
 [Authorize]
 public class EventController : Controller
@@ -42,99 +43,121 @@ public class EventController : Controller
         }
 
         var currentUser = await _userManager.GetUserAsync(User);
-        ViewBag.CanEdit = currentUser != null && (await _userManager.IsInRoleAsync(currentUser, "Administrator"));
+        if (currentUser != null)
+        {
+            ViewBag.CanEdit = (eventModel.UserId == currentUser.Id);
+        }
 
         return View(eventModel);
     }
 
-    [Authorize(Roles = "Administrator")]
+    [HttpGet]
     public async Task<IActionResult> Create()
     {
-        var model = new EventFormViewModel
-        {
-            Categories = new SelectList(await _eventService.GetAllCategoriesAsync(), "Id", "Name")
-        };
+        var model = new EventViewModel();
+        ViewBag.Categories = new SelectList(await _eventService.GetAllCategoriesAsync(), "Id", "Name");
         return View(model);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator")]
-    public async Task<IActionResult> Create(EventFormViewModel model)
+    public async Task<IActionResult> Create(EventViewModel model)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
-            model.Categories = new SelectList(await _eventService.GetAllCategoriesAsync(), "Id", "Name", model.CategoryId);
-            return View(model);
+            var eventToCreate = new Event
+            {
+                Name = model.Name,
+                Description = model.Description,
+                Date = model.Date,
+                Location = model.Location,
+                Price = model.Price,
+                MaxParticipants = model.MaxParticipants,
+                CategoryId = model.CategoryId,
+                UserId = _userManager.GetUserId(User)
+            };
+
+            await _eventService.CreateAsync(eventToCreate, model.ImageFile);
+            return RedirectToAction(nameof(Index));
         }
 
-        await _eventService.CreateAsync(model);
-        return RedirectToAction(nameof(Index));
+        ViewBag.Categories = new SelectList(await _eventService.GetAllCategoriesAsync(), "Id", "Name", model.CategoryId);
+        return View(model);
     }
 
-    [Authorize(Roles = "Administrator")]
+    [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
-        var eventModel = await _eventService.GetByIdAsync(id);
-        if (eventModel == null)
-        {
-            return NotFound();
-        }
+        var eventToEdit = await _eventService.GetByIdAsync(id);
+        if (eventToEdit == null) return NotFound();
 
-        var viewModel = new EventFormViewModel
+        if (eventToEdit.UserId != _userManager.GetUserId(User)) return Forbid();
+
+        var model = new EventViewModel
         {
-            Id = eventModel.Id,
-            Name = eventModel.Name,
-            Description = eventModel.Description,
-            Date = eventModel.Date,
-            Location = eventModel.Location,
-            Price = eventModel.Price,
-            MaxParticipants = eventModel.MaxParticipants,
-            CategoryId = eventModel.CategoryId,
-            Categories = new SelectList(await _eventService.GetAllCategoriesAsync(), "Id", "Name", eventModel.CategoryId),
-            ExistingImageUrl = eventModel.ImageUrl
+            Id = eventToEdit.Id,
+            Name = eventToEdit.Name,
+            Description = eventToEdit.Description,
+            Date = eventToEdit.Date,
+            Location = eventToEdit.Location,
+            Price = eventToEdit.Price,
+            MaxParticipants = eventToEdit.MaxParticipants,
+            CategoryId = eventToEdit.CategoryId,
+            ImageUrl = eventToEdit.ImageUrl,
         };
 
-        return View(viewModel);
+        ViewBag.Categories = new SelectList(await _eventService.GetAllCategoriesAsync(), "Id", "Name", model.CategoryId);
+        return View(model);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator")]
-    public async Task<IActionResult> Edit(int id, EventFormViewModel model)
+    public async Task<IActionResult> Edit(int id, EventViewModel model)
     {
-        if (id != model.Id)
+        if (id != model.Id) return NotFound();
+
+        var eventToUpdate = await _eventService.GetByIdAsync(id);
+        if (eventToUpdate == null) return NotFound();
+
+        if (eventToUpdate.UserId != _userManager.GetUserId(User)) return Forbid();
+
+        if (ModelState.IsValid)
         {
-            return NotFound();
+            eventToUpdate.Name = model.Name;
+            eventToUpdate.Description = model.Description;
+            eventToUpdate.Date = model.Date;
+            eventToUpdate.Location = model.Location;
+            eventToUpdate.Price = model.Price;
+            eventToUpdate.MaxParticipants = model.MaxParticipants;
+            eventToUpdate.CategoryId = model.CategoryId;
+
+            await _eventService.UpdateAsync(eventToUpdate, model.ImageFile);
+            return RedirectToAction(nameof(Index));
         }
 
-        if (!ModelState.IsValid)
-        {
-            model.Categories = new SelectList(await _eventService.GetAllCategoriesAsync(), "Id", "Name", model.CategoryId);
-            return View(model);
-        }
-
-        await _eventService.UpdateAsync(model);
-        return RedirectToAction(nameof(Index));
+        ViewBag.Categories = new SelectList(await _eventService.GetAllCategoriesAsync(), "Id", "Name", model.CategoryId);
+        return View(model);
     }
 
-    [Authorize(Roles = "Administrator")]
+    [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
-        var eventModel = await _eventService.GetByIdAsync(id);
-        if (eventModel == null)
+        var eventToDelete = await _eventService.GetByIdAsync(id);
+
+        if (eventToDelete == null || eventToDelete.UserId != _userManager.GetUserId(User))
         {
             return NotFound();
         }
-        return View(eventModel);
+
+        return View(eventToDelete);
     }
 
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        await _eventService.DeleteAsync(id);
+        var userId = _userManager.GetUserId(User);
+        await _eventService.DeleteAsync(id, userId);
         return RedirectToAction(nameof(Index));
     }
 }
