@@ -1,81 +1,37 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Политика за поверителност";
 }
-<div class="container privacy-container">
-    <h1 class="mb-4">@ViewData["Title"]</h1>
 
-    <div class="privacy-content">
-        <section class="mb-5">
-            <h2 class="mb-3">Introduction</h2>
-            <p>We value your privacy and are committed to protecting your personal information. This Privacy Policy outlines how we collect, use, and share information when you use our services.</p>
+<div class="card card-glassmorphism">
+    <div class="card-body p-5">
+        <h1 class="card-title mb-4">@ViewData["Title"]</h1>
+        <hr style="border-color: var(--border-color);" />
+
+        <section class="mb-4">
+            <h2 class="h4 mb-3">Въведение</h2>
+            <p class="text-secondary">Ние ценим вашата поверителност и сме ангажирани със защитата на личната ви информация. Тази Политика за поверителност описва как събираме, използваме и споделяме информация, когато използвате нашите услуги.</p>
         </section>
 
-        <section class="mb-5">
-            <h2 class="mb-3">Information We Collect</h2>
+        <section class="mb-4">
+            <h2 class="h4 mb-3">Информация, която събираме</h2>
             <ul>
-                <li><strong>Personal Information</strong>: When you register on our platform, we may collect your name, email address, and other personal information.</li>
-                <li><strong>Usage Data</strong>: We collect information on how you use our website, including your IP address, browser type, and pages viewed.</li>
+                <li><strong>Лична информация</strong>: Когато се регистрирате, събираме вашето име, имейл адрес и друга лична информация.</li>
+                <li><strong>Данни за използване</strong>: Събираме информация за това как използвате нашия уебсайт, включително вашия IP адрес, тип на браузъра и разглеждани страници.</li>
             </ul>
         </section>
 
-        <section class="mb-5">
-            <h2 class="mb-3">How We Use Your Information</h2>
+        <section class="mb-4">
+            <h2 class="h4 mb-3">Как използваме вашата информация</h2>
             <ul>
-                <li>To improve our services and provide personalized experiences.</li>
-                <li>To communicate with you, including sending you updates and newsletters.</li>
-                <li>To comply with legal obligations.</li>
+                <li>За да подобряваме нашите услуги и да предоставяме персонализирани изживявания.</li>
+                <li>За да комуникираме с вас, включително изпращане на актуализации и бюлетини.</li>
+                <li>За да спазваме законови задължения.</li>
             </ul>
-        </section>
-
-        <section class="mb-5">
-            <h2 class="mb-3">Sharing Your Information</h2>
-            <p>We do not sell or share your personal information with third parties, except as required by law or for services provided by trusted partners.</p>
-        </section>
-
-        <section class="mb-5">
-            <h2 class="mb-3">Security</h2>
-            <p>We implement industry-standard security measures to protect your information. However, no method of transmission over the internet is 100% secure, and we cannot guarantee its absolute security.</p>
-        </section>
-
-        <section class="mb-5">
-            <h2 class="mb-3">Your Rights</h2>
-            <p>You have the right to access, update, or delete your personal information. You can also opt out of receiving communications from us at any time.</p>
-        </section>
-
-        <section class="mb-5">
-            <h2 class="mb-3">Changes to This Policy</h2>
-            <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with the updated date.</p>
         </section>
 
         <section>
-            <h2 class="mb-3">Contact Us</h2>
-            <p>If you have any questions or concerns about this Privacy Policy, please contact us at <a href="mailto:privacy@events.com">privacy@events.com</a>.</p>
+            <h2 class="h4 mb-3">Свържете се с нас</h2>
+            <p class="text-secondary">Ако имате въпроси или притеснения относно тази Политика за поверителност, моля, свържете се с нас на <a href="mailto:privacy@events.com" style="color: var(--primary-accent);">privacy@events.com</a>.</p>
         </section>
     </div>
 </div>
-
-<style>
-    .privacy-container {
-        max-width: 800px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .privacy-content h2 {
-        color: #2c3e50;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 0.5rem;
-        margin-top: 2rem;
-    }
-
-    .privacy-content ul {
-        padding-left: 1.5rem;
-    }
-
-    .privacy-content li {
-        margin-bottom: 0.5rem;
-    }
-</style>

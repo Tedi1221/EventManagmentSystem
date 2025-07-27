@@ -1,28 +1,27 @@
 ﻿@{
-    ViewData["Title"] = "Admin Dashboard";
+    ViewData["Title"] = "Административен панел";
 }
 
-<div class="card card-glassmorphism">
-    <div class="card-body">
-        <h1 class="card-title">@ViewData["Title"]</h1>
-        <p>Добре дошли в административния панел. От тук можете да управлявате събития, потребители и други.</p>
-        <hr />
-        <div class="list-group">
-            <a asp-controller="AdminEvent" asp-action="Index" asp-area="Admin" class="list-group-item list-group-item-action">
-                <i class="fas fa-list btn-icon"></i> Управление на събития
-            </a>
+<h1 class="display-5 fw-bold mb-4">@ViewData["Title"]</h1>
+<p class="lead text-secondary mb-5">Управление на съдържанието на сайта.</p>
 
-            <a asp-area="Admin" asp-controller="AdminEvent" asp-action="Create" class="list-group-item list-group-item-action">
-                <i class="fas fa-plus btn-icon"></i> Създай ново събитие
-            </a>
-
-            <a asp-controller="User" asp-action="Index" asp-area="Admin" class="list-group-item list-group-item-action">
-                <i class="fas fa-users btn-icon"></i> Управление на потребители
-            </a>
-
-            @*<a href="#" class="list-group-item list-group-item-action disabled">
-                <i class="fas fa-tags btn-icon"></i> Категории
-            </a>*@
-        </div>
+<div class="row g-4">
+    <div class="col-md-4">
+        <a asp-controller="AdminEvent" asp-action="Index" asp-area="Admin" class="admin-card-link">
+            <i class="fas fa-list"></i>
+            <span>Управление на събития</span>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-controller="AdminEvent" asp-action="Create" asp-area="Admin" class="admin-card-link">
+            <i class="fas fa-plus"></i>
+            <span>Създай ново събитие</span>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-controller="User" asp-action="Index" asp-area="Admin" class="admin-card-link">
+            <i class="fas fa-users"></i>
+            <span>Управление на потребители</span>
+        </a>
     </div>
 </div>

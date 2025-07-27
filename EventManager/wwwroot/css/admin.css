@@ -1,0 +1,75 @@
+﻿/* --- Стил за Админ Панела --- */
+
+body {
+    background-color: #f4f7fc; /* Много светло сив фон */
+    color: #333; /* Тъмен текст за четимост */
+}
+
+/* Изчистваме стила на картите, за да са бели */
+.card-glassmorphism, .card {
+    background: #ffffff;
+    border: 1px solid #e0e5ec;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+h1, h2, h3, h4, h5 {
+    color: #2c3e50;
+}
+
+/* Стил за таблиците */
+.table {
+    background-color: #fff;
+    color: #333; /* Уверяваме се, че текстът в таблицата е тъмен */
+}
+
+    .table thead {
+        background-color: #f8f9fa;
+    }
+
+.table-hover tbody tr:hover {
+    background-color: #e9ecef;
+    color: #000;
+}
+
+/* Форми и инпути */
+.form-control, .form-select {
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    color: #212529;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
+
+/* Бутони - връщаме стандартните bootstrap бутони */
+.uiverse-btn, .uiverse-btn-secondary {
+    /* Нулираме светещия ефект тук */
+    box-shadow: none;
+    text-shadow: none;
+    border-width: 1px;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+}
+
+.btn-primary, .uiverse-btn {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-secondary, .uiverse-btn-secondary {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
