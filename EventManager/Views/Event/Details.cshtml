@@ -27,7 +27,7 @@
                     <div>
                         @if (User.IsInRole("Administrator"))
                         {
-                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning"><i class="fa fa-edit me-2"></i>Редактирай</a>
+                            <a asp-area="Admin" asp-controller="AdminEvent" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning"><i class="fa fa-edit me-2"></i>Редактирай</a>
                             <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger"><i class="fa fa-trash me-2"></i>Изтрий</a>
                         }
                         <a asp-action="Index" class="btn btn-secondary"><i class="fa fa-arrow-left me-2"></i>Обратно</a>
