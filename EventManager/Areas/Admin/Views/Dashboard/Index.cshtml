@@ -2,24 +2,26 @@
     ViewData["Title"] = "Административен панел";
 }
 
-<h1 class="display-5 fw-bold mb-4">@ViewData["Title"]</h1>
-<p class="lead text-secondary mb-5">Управление на съдържанието на сайта.</p>
+<div class="text-center">
+    <h1 class="display-5 fw-bold">@ViewData["Title"]</h1>
+    <p class="lead" style="color: #a0a0a0;">Управление на съдържанието на сайта.</p>
+</div>
 
-<div class="row g-4">
+<div class="row g-4 mt-5">
     <div class="col-md-4">
-        <a asp-controller="AdminEvent" asp-action="Index" asp-area="Admin" class="admin-card-link">
+        <a asp-controller="AdminEvent" asp-action="Index" asp-area="Admin" class="admin-card-link events">
             <i class="fas fa-list"></i>
             <span>Управление на събития</span>
         </a>
     </div>
     <div class="col-md-4">
-        <a asp-controller="AdminEvent" asp-action="Create" asp-area="Admin" class="admin-card-link">
+        <a asp-controller="AdminEvent" asp-action="Create" asp-area="Admin" class="admin-card-link create">
             <i class="fas fa-plus"></i>
             <span>Създай ново събитие</span>
         </a>
     </div>
     <div class="col-md-4">
-        <a asp-controller="User" asp-action="Index" asp-area="Admin" class="admin-card-link">
+        <a asp-controller="User" asp-action="Index" asp-area="Admin" class="admin-card-link users">
             <i class="fas fa-users"></i>
             <span>Управление на потребители</span>
         </a>

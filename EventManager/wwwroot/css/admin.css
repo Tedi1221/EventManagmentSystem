@@ -1,75 +1,55 @@
 ﻿/* --- Стил за Админ Панела --- */
 
 body {
-    background-color: #f4f7fc; /* Много светло сив фон */
-    color: #333; /* Тъмен текст за четимост */
+    /* Връщаме тъмния фон, както на основния сайт */
+    background-color: #12121f;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+    background-size: 25px 25px;
 }
 
-/* Изчистваме стила на картите, за да са бели */
-.card-glassmorphism, .card {
-    background: #ffffff;
-    border: 1px solid #e0e5ec;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+/* Стил за големите интерактивни карти-бутони */
+.admin-card-link {
+    display: block;
+    text-decoration: none;
+    color: #e0e0e0;
+    background: rgba(30, 30, 50, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-h1, h2, h3, h4, h5 {
-    color: #2c3e50;
-}
-
-/* Стил за таблиците */
-.table {
-    background-color: #fff;
-    color: #333; /* Уверяваме се, че текстът в таблицата е тъмен */
-}
-
-    .table thead {
-        background-color: #f8f9fa;
+    .admin-card-link:hover {
+        transform: translateY(-10px);
+        color: #00c2ff; /* Променяме цвета на текста и иконата при посочване */
     }
 
-.table-hover tbody tr:hover {
-    background-color: #e9ecef;
-    color: #000;
-}
-
-/* Форми и инпути */
-.form-control, .form-select {
-    background-color: #fff;
-    border: 1px solid #ced4da;
-    color: #212529;
-}
-
-    .form-control:focus, .form-select:focus {
-        border-color: #80bdff;
-        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    /* Различни цветове за box-shadow при hover */
+    .admin-card-link.events:hover {
+        box-shadow: 0 10px 40px rgba(0, 194, 255, 0.3); /* Син */
     }
 
-/* Бутони - връщаме стандартните bootstrap бутони */
-.uiverse-btn, .uiverse-btn-secondary {
-    /* Нулираме светещия ефект тук */
-    box-shadow: none;
-    text-shadow: none;
-    border-width: 1px;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    border-radius: .25rem;
-}
+    .admin-card-link.create:hover {
+        box-shadow: 0 10px 40px rgba(46, 204, 113, 0.3); /* Зелен */
+    }
 
-.btn-primary, .uiverse-btn {
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-}
+    .admin-card-link.users:hover {
+        box-shadow: 0 10px 40px rgba(231, 76, 60, 0.3); /* Червен */
+    }
 
-.btn-secondary, .uiverse-btn-secondary {
-    color: #fff;
-    background-color: #6c757d;
-    border-color: #6c757d;
-}
 
-.btn-danger {
-    color: #fff;
-    background-color: #dc3545;
-    border-color: #dc3545;
-}
+    .admin-card-link i {
+        font-size: 3rem; /* Големи икони */
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .admin-card-link span {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
