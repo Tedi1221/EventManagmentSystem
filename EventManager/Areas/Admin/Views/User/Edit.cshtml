@@ -1,0 +1,44 @@
+﻿@model EventManagementSystem.Models.UserEditViewModel
+
+@{
+    ViewData["Title"] = "Редактиране на потребител";
+}
+
+<div class="card card-glassmorphism">
+    <div class="card-body">
+        <h1 class="card-title">@ViewData["Title"]</h1>
+        <h4 class="card-subtitle mb-2 text-muted">@Model.UserName</h4>
+        <hr />
+        <div class="row">
+            <div class="col-md-6">
+                <form asp-action="Edit" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="form-group mb-3">
+                        <label asp-for="UserName" class="control-label"></label>
+                        <input asp-for="UserName" class="form-control" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="control-label">Роли</label>
+                        <select asp-for="Roles" asp-items="Model.Roles" class="form-control" multiple="multiple" style="height: 150px;"></select>
+                    </div>
+                    <div class="form-group mt-3">
+                        <input type="submit" value="Запази" class="btn btn-primary" />
+                        <a asp-controller="User" asp-action="Index" class="btn btn-secondary">Отказ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
