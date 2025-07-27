@@ -1,12 +1,13 @@
 ﻿@model EventFormViewModel
 
+<div asp-validation-summary="All" class="text-danger mb-3"></div>
+
 <div class="form-group mb-3">
     <label asp-for="Name" class="control-label"></label>
     <input asp-for="Name" class="form-control" />
     <span asp-validation-for="Name" class="text-danger"></span>
 </div>
 
-<!-- НОВО: Поле за качване на снимка -->
 <div class="form-group mb-3">
     <label asp-for="ImageFile" class="control-label"></label>
     <input asp-for="ImageFile" type="file" class="form-control" />

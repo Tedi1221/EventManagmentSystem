@@ -1,49 +1,53 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace EventManagementSystem.Models
 {
-    // ViewModel за формите за създаване/редакция на събитие
     public class EventFormViewModel
     {
         public int Id { get; set; }
 
-        [Required]
+        [Display(Name = "Име на събитието")]
+        [Required(ErrorMessage = "Моля, въведете име на събитието.")]
         [StringLength(100)]
         public string Name { get; set; } = string.Empty;
 
-        [Required]
+        [Display(Name = "Описание")]
+        [Required(ErrorMessage = "Моля, въведете описание.")]
         [StringLength(2000)]
         public string Description { get; set; } = string.Empty;
 
-        [Required]
+        [Display(Name = "Дата и час")]
+        [Required(ErrorMessage = "Моля, въведете дата и час.")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; } = DateTime.Now;
 
-        [Required]
+        [Display(Name = "Място")]
+        [Required(ErrorMessage = "Моля, въведете място.")]
         [StringLength(200)]
         public string Location { get; set; } = string.Empty;
 
-        [Range(0, double.MaxValue)]
+        [Display(Name = "Цена")]
+        [Range(0, double.MaxValue, ErrorMessage = "Цената трябва да е положително число.")]
         public decimal Price { get; set; }
 
-        [Range(1, int.MaxValue)]
+        [Display(Name = "Макс. участници")]
+        [Range(1, int.MaxValue, ErrorMessage = "Броят участници трябва да е поне 1.")]
         public int MaxParticipants { get; set; }
 
-        [Required]
-        [Display(Name = "Category")]
+        [Display(Name = "Категория")]
+        [Required(ErrorMessage = "Моля, изберете категория.")]
         public int CategoryId { get; set; }
 
-        [Display(Name = "Event Image")]
+        [Display(Name = "Снимка на събитието")]
         public IFormFile? ImageFile { get; set; }
 
         public string? ExistingImageUrl { get; set; }
 
+        // Това пропърти се пълни от контролера и служи за опциите в dropdown-а
         public IEnumerable<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
-
-        // Define properties for the view model here
-        public string EventName { get; set; }
-        public DateTime EventDate { get; set; }
-        // Add other properties as needed
     }
 }
