@@ -1,9 +1,12 @@
-﻿using EventManagementSystem.Models;
+﻿using EventManagementSystem.Data; // ДОБАВЕНО
+using EventManagementSystem.Models;
 using EventManagementSystem.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore; // ДОБАВЕНО
+using System;
 using System.Threading.Tasks;
 
 [Authorize]
@@ -11,11 +14,14 @@ public class EventController : Controller
 {
     private readonly IEventService _eventService;
     private readonly UserManager<User> _userManager;
+    private readonly ApplicationDbContext _context; // НОВО: Добавяме DbContext
 
-    public EventController(IEventService eventService, UserManager<User> userManager)
+    // НОВО: Обновяваме конструктора
+    public EventController(IEventService eventService, UserManager<User> userManager, ApplicationDbContext context)
     {
         _eventService = eventService;
         _userManager = userManager;
+        _context = context;
     }
 
     [AllowAnonymous]
@@ -51,12 +57,64 @@ public class EventController : Controller
         return View(eventModel);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Create()
+    // НОВО: ЦЕЛИЯТ МЕТОД ЗА ЗАПИСВАНЕ
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Register(int eventId)
     {
-        var model = new EventViewModel();
-        ViewBag.Categories = new SelectList(await _eventService.GetAllCategoriesAsync(), "Id", "Name");
-        return View(model);
+        var userId = _userManager.GetUserId(User);
+        var eventToRegister = await _eventService.GetByIdAsync(eventId);
+
+        if (eventToRegister == null)
+        {
+            return NotFound();
+        }
+
+        // Проверка дали потребителят вече не е записан
+        var isAlreadyRegistered = await _context.EventParticipants
+            .AnyAsync(p => p.EventId == eventId && p.UserId == userId);
+
+        if (isAlreadyRegistered)
+        {
+            TempData["ErrorMessage"] = "Вече сте записани за това събитие.";
+            return RedirectToAction("Details", new { id = eventId });
+        }
+
+        // Проверка за свободни места
+        var participantsCount = await _context.EventParticipants.CountAsync(p => p.EventId == eventId);
+        if (participantsCount >= eventToRegister.MaxParticipants)
+        {
+            TempData["ErrorMessage"] = "Няма свободни места за това събитие.";
+            return RedirectToAction("Details", new { id = eventId });
+        }
+
+        var participant = new EventParticipant
+        {
+            EventId = eventId,
+            UserId = userId
+        };
+
+        _context.EventParticipants.Add(participant);
+        await _context.SaveChangesAsync();
+
+        TempData["SuccessMessage"] = "Вие се записахте успешно за събитието!";
+        return RedirectToAction("Details", new { id = eventId });
+    }
+
+    [Authorize]
+    public async Task<IActionResult> MyEvents()
+    {
+        var userId = _userManager.GetUserId(User);
+
+        var myEvents = await _context.EventParticipants
+            .Where(p => p.UserId == userId)
+            .Include(p => p.Event.Category)
+            .Select(p => p.Event)
+            .OrderByDescending(e => e.Date)
+            .ToListAsync();
+
+        return View(myEvents);
     }
 
     [HttpPost]
