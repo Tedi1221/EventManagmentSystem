@@ -43,12 +43,7 @@ namespace EventManagementSystem.Services
             }
 
             var totalCount = await query.CountAsync();
-
-            var events = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
+            var events = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return (events, totalCount);
         }
 
@@ -67,9 +62,8 @@ namespace EventManagementSystem.Services
             }
             else
             {
-                eventToCreate.ImageUrl = "/images/default-event.jpg"; // Задаваме снимка по подразбиране
+                eventToCreate.ImageUrl = "/images/default-event.jpg";
             }
-
             _context.Events.Add(eventToCreate);
             await _context.SaveChangesAsync();
             return eventToCreate;
@@ -79,32 +73,27 @@ namespace EventManagementSystem.Services
         {
             if (imageFile != null && imageFile.Length > 0)
             {
-                // Изтриваме старата снимка, ако има такава и не е default
                 if (!string.IsNullOrEmpty(eventToUpdate.ImageUrl) && !eventToUpdate.ImageUrl.Equals("/images/default-event.jpg"))
                 {
                     DeleteImage(eventToUpdate.ImageUrl);
                 }
                 eventToUpdate.ImageUrl = await SaveImageAsync(imageFile);
             }
-
             _context.Events.Update(eventToUpdate);
             await _context.SaveChangesAsync();
             return eventToUpdate;
         }
 
-        // ДОБАВЕН ЦЕЛИЯТ МЕТОД ЗА ИЗТРИВАНЕ
         public async Task<bool> DeleteAsync(int id, string userId, bool isAdmin = false)
         {
             var eventToDelete = await _context.Events.FindAsync(id);
             if (eventToDelete == null) return false;
 
-            // Ако потребителят не е админ, проверяваме дали е собственик
             if (!isAdmin && eventToDelete.UserId != userId)
             {
-                return false; // Не позволяваме изтриването
+                return false;
             }
 
-            // Ако е админ, горната проверка се пропуска и се трие директно
             if (!string.IsNullOrEmpty(eventToDelete.ImageUrl))
             {
                 DeleteImage(eventToDelete.ImageUrl);
@@ -122,9 +111,7 @@ namespace EventManagementSystem.Services
         public void DeleteImage(string imageUrl)
         {
             if (string.IsNullOrEmpty(imageUrl) || imageUrl.Equals("/images/default-event.jpg")) return;
-
             var imagePath = Path.Combine(_hostingEnvironment.WebRootPath, imageUrl.TrimStart('/'));
-
             if (File.Exists(imagePath))
             {
                 File.Delete(imagePath);
@@ -134,21 +121,17 @@ namespace EventManagementSystem.Services
         public async Task<string> SaveImageAsync(IFormFile? imageFile)
         {
             if (imageFile == null || imageFile.Length == 0) return "/images/default-event.jpg";
-
             var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "images", "events");
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
             }
-
             var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(imageFile.FileName)}";
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await imageFile.CopyToAsync(fileStream);
             }
-
             return $"/images/events/{uniqueFileName}";
         }
     }

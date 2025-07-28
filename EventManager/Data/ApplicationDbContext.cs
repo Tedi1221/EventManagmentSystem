@@ -11,9 +11,9 @@ namespace EventManagementSystem.Data
         {
         }
 
-        public DbSet<Event> Events { get; set; } = null!;
-        public DbSet<Category> Categories { get; set; } = null!;
-        public DbSet<EventParticipant> EventParticipants { get; set; }
+        public virtual DbSet<Event> Events { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<EventParticipant> EventParticipants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

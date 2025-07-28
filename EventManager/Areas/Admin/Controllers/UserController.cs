@@ -1,5 +1,5 @@
 ﻿using EventManagementSystem.Data;
-using EventManagementSystem.Models; // Добави using за ViewModels
+using EventManagementSystem.Models; 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,14 +23,14 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             _roleManager = roleManager;
         }
 
-        // GET: Admin/User
+
         public async Task<IActionResult> Index()
         {
             var users = await _userManager.Users.ToListAsync();
             return View(users);
         }
 
-        // GET: Admin/User/Edit/guid
+
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -63,7 +63,7 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             return View(model);
         }
 
-        // POST: Admin/User/Edit/guid
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(UserEditViewModel model)

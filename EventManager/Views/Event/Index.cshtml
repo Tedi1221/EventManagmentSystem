@@ -13,7 +13,7 @@
         <h1 class="display-5">@ViewData["Title"]</h1>
         <p class="lead">Разгледай и намери твоето следващо преживяване</p>
     </div>
-    <!-- ДОБАВЕН БУТОН ЗА СЪЗДАВАНЕ -->
+    <!--БУТОН ЗА СЪЗДАВАНЕ -->
     @if (User.IsInRole("Administrator"))
     {
         <div>
@@ -24,7 +24,7 @@
     }
 </div>
 
-<!-- Форма за търсене и филтриране -->
+<!--търсене и филтриране -->
 <div class="card card-glassmorphism p-3 mb-5">
     <form asp-action="Index" method="get" class="row g-3 align-items-center">
         <div class="col-md-6">
@@ -72,7 +72,6 @@
     }
 </div>
 
-<!-- Пагинация -->
 @if (totalPages > 1)
 {
     <nav>

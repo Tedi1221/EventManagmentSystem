@@ -1,11 +1,11 @@
-﻿using EventManagementSystem.Data; // ДОБАВЕНО
+﻿using EventManagementSystem.Data; 
 using EventManagementSystem.Models;
 using EventManagementSystem.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore; // ДОБАВЕНО
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
@@ -14,9 +14,9 @@ public class EventController : Controller
 {
     private readonly IEventService _eventService;
     private readonly UserManager<User> _userManager;
-    private readonly ApplicationDbContext _context; // НОВО: Добавяме DbContext
+    private readonly ApplicationDbContext _context; 
 
-    // НОВО: Обновяваме конструктора
+    
     public EventController(IEventService eventService, UserManager<User> userManager, ApplicationDbContext context)
     {
         _eventService = eventService;
@@ -57,7 +57,7 @@ public class EventController : Controller
         return View(eventModel);
     }
 
-    // НОВО: ЦЕЛИЯТ МЕТОД ЗА ЗАПИСВАНЕ
+    
     [HttpPost]
     [Authorize]
     [ValidateAntiForgeryToken]

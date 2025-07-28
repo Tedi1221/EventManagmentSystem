@@ -14,8 +14,6 @@ namespace EventManagementSystem.Services.Contracts
         Task<IEnumerable<Category>> GetAllCategoriesAsync();
         void DeleteImage(string imageUrl);
         Task<string> SaveImageAsync(IFormFile? imageFile);
-
-        // ПОПРАВКА: Обнови този ред, за да приема 3 аргумента
         Task<bool> DeleteAsync(int id, string userId, bool isAdmin = false);
     }
 }

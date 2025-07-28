@@ -39,7 +39,6 @@ namespace EventManagementSystem.Models
 
         public ICollection<EventParticipant> Participants { get; set; } = new List<EventParticipant>();
 
-        // Add this property to link event to a user
         public string UserId { get; set; } = string.Empty;
     }
 }

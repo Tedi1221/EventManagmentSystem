@@ -9,5 +9,5 @@
     public int MaxParticipants { get; set; }
     public int CategoryId { get; set; }
     public IFormFile? ImageFile { get; set; }
-    public string? ImageUrl { get; set; } // Add this property to handle image URLs
+    public string? ImageUrl { get; set; }
 }

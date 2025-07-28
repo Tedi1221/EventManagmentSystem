@@ -7,12 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Конфигурация на базата данни
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-// Конфигурация на Identity
+
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -25,10 +24,8 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-// Добавяне на услуги
 builder.Services.AddScoped<IEventService, EventService>();
 
-// Конфигурация на авторизация
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Administrator"));
@@ -38,7 +35,6 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Конфигуриране на pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -57,7 +53,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Инициализация на данни
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -65,7 +60,6 @@ using (var scope = app.Services.CreateScope())
     await DbSeeder.SeedCategoriesAsync(services);
 }
 
-// Маршрути
 app.MapControllerRoute(
     name: "Admin",
     pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");

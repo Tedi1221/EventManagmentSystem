@@ -22,7 +22,7 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             _userManager = userManager;
         }
 
-        // GET: Admin/AdminEvent
+
         public async Task<IActionResult> Index(string? searchTerm, int? categoryId, int page = 1)
         {
             const int pageSize = 10;
@@ -37,11 +37,11 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             return View(events);
         }
 
-        // GET: Admin/AdminEvent/Create
+
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            // ПОПРАВКА: Създаваме модела и му подаваме списъка с категории.
+            //Създаваме модела и му подаваме списъка с категории.
             var model = new EventFormViewModel
             {
                 Categories = new SelectList(await _eventService.GetAllCategoriesAsync(), "Id", "Name")
@@ -49,7 +49,7 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             return View(model);
         }
 
-        // POST: Admin/AdminEvent/Create
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EventFormViewModel model)
@@ -78,7 +78,7 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Admin/AdminEvent/Edit/5
+
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -96,14 +96,13 @@ namespace EventManagementSystem.Areas.Admin.Controllers
                 MaxParticipants = eventModel.MaxParticipants,
                 CategoryId = eventModel.CategoryId,
                 ExistingImageUrl = eventModel.ImageUrl,
-                // Тази линия е коректна и зарежда категориите за Edit страницата.
                 Categories = new SelectList(await _eventService.GetAllCategoriesAsync(), "Id", "Name", eventModel.CategoryId)
             };
 
             return View(viewModel);
         }
 
-        // POST: Admin/AdminEvent/Edit/5
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EventFormViewModel model)
@@ -132,7 +131,7 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Admin/AdminEvent/Delete/5
+
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -144,7 +143,7 @@ namespace EventManagementSystem.Areas.Admin.Controllers
             return View(eventModel);
         }
 
-        // POST: Admin/AdminEvent/Delete/5
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -1,6 +1,6 @@
-﻿// Път: Controllers/ProfileController.cs
+﻿
 
-using EventManagementSystem.Data;  // Добавете това за импортиране на ApplicationDbContext
+using EventManagementSystem.Data;  
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using EventManagementSystem.Models;

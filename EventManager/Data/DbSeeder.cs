@@ -47,7 +47,8 @@ namespace EventManagementSystem.Data
                     new Category { Name = "Спорт" },
                     new Category { Name = "Технологии" },
                     new Category { Name = "Изкуство" },
-                    new Category { Name = "Бизнес" }
+                    new Category { Name = "Бизнес" },
+                    new Category { Name = "Други" }
                 };
                 await dbContext.Categories.AddRangeAsync(categories);
                 await dbContext.SaveChangesAsync();

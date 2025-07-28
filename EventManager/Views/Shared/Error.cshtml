@@ -3,12 +3,20 @@
     ViewData["Title"] = "Грешка";
 }
 
-<h1 class="text-danger">Грешка.</h1>
-<h2 class="text-danger">Възникна грешка при обработката на вашата заявка.</h2>
+<div class="card card-glassmorphism text-center">
+    <div class="card-body p-5">
+        <h1 class="display-1" style="color: var(--danger-color);">Грешка</h1>
+        <h2 class="text-secondary">Възникна неочаквана грешка при обработка на вашата заявка.</h2>
+        <p class="mt-4">
+            Моля, опитайте отново по-късно или се върнете на
+            <a asp-controller="Home" asp-action="Index" style="color: var(--primary-accent);">началната страница</a>.
+        </p>
 
-@if (Model?.ShowRequestId ?? false)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
+        @if (Model?.ShowRequestId ?? false)
+        {
+            <p class="mt-5">
+                <strong style="color: var(--danger-color);">Request ID:</strong> <code class="user-select-all">@Model.RequestId</code>
+            </p>
+        }
+    </div>
+</div>

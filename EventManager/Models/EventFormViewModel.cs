@@ -47,7 +47,6 @@ namespace EventManagementSystem.Models
 
         public string? ExistingImageUrl { get; set; }
 
-        // Това пропърти се пълни от контролера и служи за опциите в dropdown-а
         public IEnumerable<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
     }
 }
