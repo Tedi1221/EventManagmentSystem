@@ -11,7 +11,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -35,6 +34,15 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+// ПОПРАВКА 1: Добавяме настройки за българска локализация (лв., дати и т.н.)
+var supportedCultures = new[] { "bg-BG" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
+
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -42,6 +50,8 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
+    // ПОПРАВКА 2: Добавяме реда за обработка на 404 и други статус кодове
+    app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
     app.UseHsts();
 }
 
