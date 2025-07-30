@@ -1,9 +1,8 @@
 ﻿using EventManagementSystem.Data;
 using EventManagementSystem.Models;
 using EventManagementSystem.Services;
-using EventManagementSystem.Services.Contracts; 
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System.Collections.Generic;
@@ -16,7 +15,7 @@ namespace EventManager.Tests.Services
     public class EventServiceTests
     {
         private readonly ApplicationDbContext _context;
-        private readonly Mock<IFileStorageService> _fileStorageServiceMock; 
+        private readonly Mock<IWebHostEnvironment> _webHostEnvironmentMock;
         private readonly EventService _eventService;
 
         public EventServiceTests()
@@ -24,9 +23,9 @@ namespace EventManager.Tests.Services
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: $"EventManagerTestDb_{System.Guid.NewGuid()}")
                 .Options;
-            _context = new ApplicationDbContext(options);
 
-            _fileStorageServiceMock = new Mock<IFileStorageService>();
+            _context = new ApplicationDbContext(options);
+            _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
 
 
             _context.Events.AddRange(new List<Event>
@@ -36,30 +35,7 @@ namespace EventManager.Tests.Services
             });
             _context.SaveChanges();
 
-
-            _eventService = new EventService(_context, _fileStorageServiceMock.Object);
-        }
-
-        [Fact]
-        public async Task CreateAsync_ShouldCallUpload_WhenImageFileIsProvided()
-        {
-
-            var newEvent = new Event { Name = "New Concert", UserId = "user-id" };
-            var mockFile = new Mock<IFormFile>();
-
-
-            mockFile.Setup(f => f.Length).Returns(1);
-
-            _fileStorageServiceMock
-                .Setup(f => f.UploadAsync(It.IsAny<IFormFile>(), It.IsAny<string>()))
-                .ReturnsAsync("http://dropbox.com/image.jpg");
-
-
-            await _eventService.CreateAsync(newEvent, mockFile.Object);
-
-
-            _fileStorageServiceMock.Verify(f => f.UploadAsync(mockFile.Object, It.IsAny<string>()), Times.Once);
-            _context.Events.FirstOrDefault(e => e.Name == "New Concert").ImageUrl.Should().Be("http://dropbox.com/image.jpg");
+            _eventService = new EventService(_context, _webHostEnvironmentMock.Object);
         }
 
         [Fact]
@@ -73,13 +49,78 @@ namespace EventManager.Tests.Services
         }
 
         [Fact]
+        public async Task CreateAsync_ShouldAddEvent()
+        {
+
+            var newEvent = new Event { Name = "New Concert", UserId = "user-id" };
+
+ 
+            await _eventService.CreateAsync(newEvent, null);
+
+
+            _context.Events.Should().HaveCount(3);
+            _context.Events.FirstOrDefault(e => e.Name == "New Concert").Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task UpdateAsync_ShouldUpdateEventData()
+        {
+ 
+            var eventToUpdate = await _context.Events.FindAsync(1);
+            eventToUpdate.Name = "Updated Name";
+
+
+            await _eventService.UpdateAsync(eventToUpdate, null);
+            var updatedEvent = await _context.Events.FindAsync(1);
+
+
+            updatedEvent.Should().NotBeNull();
+            updatedEvent.Name.Should().Be("Updated Name");
+        }
+
+        [Fact]
         public async Task DeleteAsync_ShouldReturnTrue_AndRemoveEvent_WhenUserIsOwner()
         {
 
             var result = await _eventService.DeleteAsync(1, "owner-id", false);
 
+
             result.Should().BeTrue();
             (await _context.Events.FindAsync(1)).Should().BeNull();
+        }
+
+        [Fact]
+        public async Task DeleteAsync_ShouldReturnFalse_WhenUserIsNotOwner()
+        {
+
+            var result = await _eventService.DeleteAsync(1, "not-the-owner-id", false);
+
+
+            result.Should().BeFalse();
+            (await _context.Events.FindAsync(1)).Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task DeleteAsync_ShouldReturnTrue_WhenUserIsAdmin()
+        {
+
+            var result = await _eventService.DeleteAsync(1, "admin-id", true);
+
+
+            result.Should().BeTrue();
+            (await _context.Events.FindAsync(1)).Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnFilteredEvents_WhenSearchTermIsProvided()
+        {
+
+            var searchTerm = "Event 1";
+
+            var (resultEvents, totalCount) = await _eventService.GetAllAsync(searchTerm, null, 1, 10);
+            totalCount.Should().Be(1);
+            resultEvents.Should().HaveCount(1);
+            resultEvents.First().Name.Should().Be("Test Event 1");
         }
     }
 }
