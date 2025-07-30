@@ -23,7 +23,9 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
+
 builder.Services.AddScoped<IEventService, EventService>();
+
 
 builder.Services.AddAuthorization(options =>
 {
@@ -31,10 +33,10 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR(); 
 
 var app = builder.Build();
 
-// ПОПРАВКА 1: Добавяме настройки за българска локализация (лв., дати и т.н.)
 var supportedCultures = new[] { "bg-BG" };
 var localizationOptions = new RequestLocalizationOptions()
     .SetDefaultCulture(supportedCultures[0])
@@ -50,7 +52,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // ПОПРАВКА 2: Добавяме реда за обработка на 404 и други статус кодове
     app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
     app.UseHsts();
 }
@@ -78,4 +79,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapHub<EventManagementSystem.Hubs.ChatHub>("/chatHub");
 app.Run();

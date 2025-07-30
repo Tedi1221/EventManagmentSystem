@@ -1,6 +1,4 @@
-﻿/* --- ОСНОВЕН CSS ФАЙЛ (site.css) --- */
-
-/* 1. Цветова палитра и глобални стилове */
+﻿/* 1. Цветова палитра и глобални стилове */
 :root {
     --background-dark: #12121f;
     --card-background: rgba(30, 30, 50, 0.6);
@@ -211,4 +209,17 @@ body {
 .details-content-column {
     position: relative;
     z-index: 2;
+}
+
+/* Поправка за картата, за да е видима */
+#map {
+    height: 300px !important; /* Задаваме височина */
+    width: 100%;
+    z-index: 10; /* Гарантира, че е над други елементи */
+    border-radius: 12px;
+}
+
+/* Показва картата, когато е нужно */
+.map-visible {
+    display: block !important;
 }

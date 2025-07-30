@@ -4,16 +4,16 @@
 }
 
 <div class="card card-glassmorphism">
-    <div class="card-body">
+    <div class="card-body p-4">
         <h1 class="card-title">@ViewData["Title"]</h1>
-        <hr />
+        <hr style="border-color: var(--border-color);" />
         <div class="row">
             <div class="col-md-8">
                 <form asp-action="Create" method="post" enctype="multipart/form-data">
                     <partial name="_EventFormPartial" model="Model" />
-                    <div class="form-group mt-3">
-                        <input type="submit" value="Създай" class="btn btn-primary" />
-                        <a asp-action="Index" class="btn btn-secondary">Отказ</a>
+                    <div class="form-group mt-4">
+                        <input type="submit" value="Създай" class="uiverse-btn" />
+                        <a asp-action="Index" asp-controller="AdminEvent" class="uiverse-btn-secondary">Отказ</a>
                     </div>
                 </form>
             </div>

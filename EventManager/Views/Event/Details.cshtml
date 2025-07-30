@@ -35,6 +35,21 @@
                 <h4 class="mt-4">Описание</h4>
                 <p class="card-text text-secondary">@Model.Description</p>
 
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <hr style="border-color: var(--border-color); margin-top: 2rem;" />
+                    <h4 class="mt-4">Чат на живо</h4>
+                    <div class="card mt-3" style="background: rgba(0,0,0,0.2); border-color: var(--border-color);">
+                        <div class="card-body">
+                            <ul id="messagesList" class="list-unstyled" style="max-height: 200px; overflow-y: auto; padding-right: 10px;"></ul>
+                        </div>
+                        <div class="card-footer d-flex p-2" style="background: none; border-top: 1px solid var(--border-color);">
+                            <input type="text" id="messageInput" class="form-control me-2" placeholder="Напиши съобщение..." />
+                            <button type="button" id="sendButton" class="uiverse-btn" style="padding: 0.5em 1em;"><i class="fa fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                }
+
                 <div class="d-flex justify-content-between align-items-center mt-5">
                     <div>
                         <span class="h2 fw-bold" style="color: var(--primary-accent);">@Model.Price.ToString("C")</span>
@@ -68,3 +83,57 @@
 
     </div>
 </div>
+
+@section Scripts {
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const chatElements = {
+                    connection: new signalR.HubConnectionBuilder().withUrl("/chatHub").build(),
+                    sendButton: document.getElementById("sendButton"),
+                    messageInput: document.getElementById("messageInput"),
+                    messagesList: document.getElementById("messagesList")
+                };
+
+                if (chatElements.sendButton) {
+                    chatElements.sendButton.disabled = true;
+
+                    chatElements.connection.on("ReceiveMessage", function (user, message) {
+                        const li = document.createElement("li");
+                        li.style.color = "var(--text-primary)";
+                        li.innerHTML = `<strong>${user}:</strong> ${message.replace(/</g, "&lt;").replace(/>/g, "&gt;")}`;
+                        chatElements.messagesList.appendChild(li);
+                        chatElements.messagesList.scrollTop = chatElements.messagesList.scrollHeight;
+                    });
+
+                    chatElements.connection.start().then(function () {
+                        chatElements.sendButton.disabled = false;
+                        chatElements.connection.invoke("AddToGroup", "@Model.Id").catch(err => console.error(err.toString()));
+                    }).catch(err => console.error(err.toString()));
+
+                    function sendMessage() {
+                        const message = chatElements.messageInput.value;
+                        if (message.trim() === "") return;
+                        chatElements.connection.invoke("SendMessageToGroup", "@Model.Id", message).then(() => {
+                            chatElements.messageInput.value = "";
+                        }).catch(err => console.error(err.toString()));
+                    }
+
+                    chatElements.sendButton.addEventListener("click", event => {
+                        sendMessage();
+                        event.preventDefault();
+                    });
+
+                    chatElements.messageInput.addEventListener("keypress", event => {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                            sendMessage();
+                        }
+                    });
+                }
+            });
+        </script>
+    }
+}
