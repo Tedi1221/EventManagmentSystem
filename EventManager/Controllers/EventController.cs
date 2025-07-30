@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 
 [Authorize]
 public class EventController : Controller
@@ -208,6 +209,22 @@ public class EventController : Controller
         }
 
         return View(eventToDelete);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Favorites([FromQuery] List<int> ids)
+    {
+        if (ids == null || !ids.Any())
+        {
+            return View(new List<Event>());
+        }
+
+        var favoriteEvents = await _context.Events
+            .Where(e => ids.Contains(e.Id))
+            .Include(e => e.Category)
+            .ToListAsync();
+
+        return View(favoriteEvents);
     }
 
     [HttpPost, ActionName("Delete")]

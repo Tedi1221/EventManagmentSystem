@@ -223,3 +223,23 @@ body {
 .map-visible {
     display: block !important;
 }
+
+/* Стил за бутона "Любими" */
+.favorite-btn {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+    .favorite-btn:hover {
+        color: #ff6b81; /* Розово при посочване */
+    }
+
+    /* Стил, когато събитието е в "Любими" */
+    .favorite-btn.active i::before {
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900; /* Това сменя иконата на запълнена */
+        content: "\f004";
+        color: #ff6b81;
+    }

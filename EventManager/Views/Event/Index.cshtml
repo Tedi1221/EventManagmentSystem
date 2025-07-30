@@ -55,18 +55,37 @@
                             <i class="fa-solid fa-location-dot me-2"></i>@item.Location
                         </p>
                     </div>
-                    <div class="mt-3 d-flex justify-content-between">
-                        <a asp-controller="Event" asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary">Детайли</a>
-                        @if (User.IsInRole("Administrator"))
-                        {
-                            <div>
+                    <div class="mt-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <a asp-controller="Event" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Детайли</a>
+                            @if (User.IsInRole("Administrator"))
+                            {
                                 <a asp-area="Admin" asp-controller="AdminEvent" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Редактирай</a>
                                 <a asp-area="Admin" asp-controller="AdminEvent" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Изтрий</a>
-                            </div>
-                        }
+                            }
+                        </div>
+                        <div>
+                            <a href="#" class="favorite-btn" data-event-id="@item.Id" title="Добави в любими">
+                                <i class="fa-regular fa-heart"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     }
 </div>
+
+@if (totalPages > 1)
+{
+    <nav>
+        <ul class="pagination justify-content-center mt-4">
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == currentPage ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-searchTerm="@searchTerm" asp-route-categoryId="@categoryId">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
