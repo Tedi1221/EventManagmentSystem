@@ -9,6 +9,8 @@
 
 Welcome to **EventManager**, a modern and intuitive web application for creating, managing, and exploring events of all kinds – from conferences and workshops to parties and concerts.
 
+**Live Demo**: [Click here to visit the live app](https://event-master-app-hha4bmauf8g8b6ey.westeurope-01.azurewebsites.net/)
+
 > This project was developed as part of my **ASP.NET Advanced course at SoftUni**, while studying **Software Engineering at the Technical University of Sofia**.  
 It demonstrates my practical skills in **C#**, **ASP.NET Core MVC**, and real-world web development.
 
