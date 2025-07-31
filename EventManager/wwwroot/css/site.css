@@ -211,20 +211,18 @@ body {
     z-index: 2;
 }
 
-/* Поправка за картата, за да е видима */
+
 #map {
-    height: 300px !important; /* Задаваме височина */
+    height: 300px !important; 
     width: 100%;
-    z-index: 10; /* Гарантира, че е над други елементи */
+    z-index: 10; 
     border-radius: 12px;
 }
 
-/* Показва картата, когато е нужно */
 .map-visible {
     display: block !important;
 }
 
-/* Стил за бутона "Любими" */
 .favorite-btn {
     font-size: 1.5rem;
     color: var(--text-secondary);
@@ -236,10 +234,58 @@ body {
         color: #ff6b81; /* Розово при посочване */
     }
 
-    /* Стил, когато събитието е в "Любими" */
+    
     .favorite-btn.active i::before {
         font-family: "Font Awesome 6 Free";
-        font-weight: 900; /* Това сменя иконата на запълнена */
+        font-weight: 900;
         content: "\f004";
         color: #ff6b81;
     }
+
+.footer-glassmorphism {
+    background: rgba(18, 18, 31, 0.7); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-heading {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.footer-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+    .footer-link:hover {
+        color: var(--primary-accent);
+    }
+
+.social-icons .social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+    .social-icons .social-icon:hover {
+        background-color: var(--primary-accent);
+        color: var(--background-dark);
+        transform: translateY(-3px);
+    }
+
+.border-top-glass {
+    border-top: 1px solid var(--border-color);
+}

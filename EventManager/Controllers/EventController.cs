@@ -212,6 +212,7 @@ public class EventController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> Favorites([FromQuery] List<int> ids)
     {
         if (ids == null || !ids.Any())
